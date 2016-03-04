@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Chesser</title>
+		<link rel="stylesheet" type="text/css" href="reset.css">
+		<link rel="stylesheet" type="text/css" href="main.css">
+		<script src="jquery.min.js"></script>
+		<script src="main.js"></script>
+	</head>
+	<body>
+		<div id="main" style="max-width: 1280px;">
+			<h1 id="site-title"><a href="/">Chesser</a></h1>
+			<!-- This is the Chesser, simply a hacked up webpage to display chess so I know the games are valid. Do not take this code seriously -->
+			<div id="chesser">
+				<table id="rank-file">
+					<tbody><tr>
+						<td>8</td>
+						<td colspan="8" rowspan="8" id="canvases-wrapper">
+							<div class="canvases">
+								<canvas class="background" width="720" height="720">
+								</canvas>
+								<canvas class="ui" width="720" height="720">
+								</canvas>
+								<canvas class="pieces" width="720" height="720">
+								</canvas>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>7</td>
+					</tr>
+					<tr>
+						<td>6</td>
+					</tr>
+					<tr>
+						<td>5</td>
+					</tr>
+					<tr>
+						<td>4</td>
+					</tr>
+					<tr>
+						<td>3</td>
+					</tr>
+					<tr>
+						<td>2</td>
+					</tr>
+					<tr>
+						<td>1</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><span class="same-width">a</span></td>
+						<td><span class="same-width">b</span></td>
+						<td><span class="same-width">c</span></td>
+						<td><span class="same-width">d</span></td>
+						<td><span class="same-width">e</span></td>
+						<td><span class="same-width">f</span></td>
+						<td><span class="same-width">g</span></td>
+						<td><span class="same-width">h</span></td>
+					</tr>
+				</tbody></table>
+				<div class="infobox">
+					<div class="tabs">
+						<span class="tab-for-status">Status</span>
+						<span class="tab-for-file">File</span>
+						<span class="tab-for-connection">Connection</span>
+						<span class="tab-for-inspect">Inspect</span>
+						<span class="tab-for-help current">Help</span>
+					</div>
+					<div class="tabs-content">
+						<div class="status">
+							<div class="no-game">No game.</div>
+							<div class="game" style="display: none;">
+								<div class="turn">Turn:
+									<span class="currentTurn">###</span>
+									<span id="turn-controls">
+										<input type="range" id="turn-slider" min="0" max="1" step="1" value="0">
+										<button id="play-pause">►</button>
+										<button id="prev-turn">«</button>
+										<button id="next-turn">»</button>
+										<label for="playback-speed">Speed</label>
+										<input type="number" id="playback-speed" min="0.00" max="1000" step="0.01">
+									</span>
+								</div>
+								<div class="player player-0 white-player">White Player "<span class="name">NAME</span>" <span class="reason"></span></div>
+								<div class="player player-1 black-player">Black Player "<span class="name">NAME</span>" <span class="reason"></span></div>
+								<section class="confirm-move">
+									<heading>Your Move</heading>
+									<div class="time">###</div>
+									<div class="message"></div>
+									<div class="field promotion-field">
+										<label for="promotion-type">Promote to:</label>
+										<select id="promotion-type" name="promotion-type">
+											<option value="Bishop">Bishop</option>
+											<option value="Knight">Knight</option>
+											<option value="Queen" selected="selected">Queen</option>
+											<option value="Rook">Rook</option>
+										</select>
+									</div>
+									<button class="confirm" disabled="">Confirm</button>
+								</section>
+								<section class="moves">
+									<heading>Moves</heading>
+									<ol>
+									</ol>
+								</section>
+							</div>
+						</div>
+						<div class="file">
+							<div class="no-load" style="display: none;">Cannot load gamelogs when connecting to live a game.</div>
+							<a id="gamelog-download" href="http://r99acm.device.mst.edu:3080/chesser#" style="display: none;" download="">Download Gamelog for local playback</a>
+							<input type="file" id="gamelog-file" name="gamelogfile">
+							<div id="file-loading" style="display: none;">
+								Loading <progress></progress>
+							</div>
+							<ul class="messages">
+							</ul>
+						</div>
+						<div class="connection">
+							<form class="connect">
+								<div class="field">
+									<label for="server">Server</label>
+									<input id="server" name="server" type="textbox" value="r99acm.device.mst.edu">
+								</div>
+								<div class="field">
+									<label for="port">Port</label>
+									<input id="port" name="port" type="number" min="80" max="65535" value="3088">
+								</div>
+								<div class="field">
+									<label for="session">Session</label>
+									<input id="session" name="session" type="textbox" value="new">
+								</div>
+								<div class="field">
+									<label for="spectate">Spectate</label>
+									<input id="spectate" name="spectate" type="checkbox">
+								</div>
+								<div class="field">
+									<label for="player-name">Player Name</label>
+									<input id="player-name" name="player-name" type="textbox" value="Human">
+								</div>
+								<div class="field">
+									<label></label>
+									<input type="submit" value="Connect">
+								</div>
+							</form>
+							<ul class="connected">
+							</ul>
+						</div>
+						<div class="inspect">
+							<div class="need-game-loaded">Load a game to inspect it.</div>
+							<ul id="inspect-tree">
+							</ul>
+						</div>
+						<div class="help">
+							<h2>Help</h2>
+							<p>This page, "Chesser", is designed to allow you to visually see Chess games. You can choose to either connect to live games to watch or play, or playback saved gamelog files to inspect what happened throughout the game.</p>
+							<p>If you ever need to load a different game, just reload the page.</p>
+							<hr>
+							<h2>Controls</h2>
+							<p>
+								</p><ul>
+									<li><strong>Left Click</strong>: When playing, selects a Piece to move, or selects a move. Otherwise inspects the Piece.</li>
+									<li><strong>Right Click</strong>: Inspects the Piece, regardless of mode.</li>
+								</ul>
+							<p></p>
+							<hr>
+							<h2>Help</h2>
+							<p>"Chesser" human interface game client/visualizer for Missouri S&amp;T's <a href="http://blog.megaminerai.com/">ACM SIG-GAME</a> and CS 5400 - Introduction To Artificial Intelligence.</p>
+							<p>Questions and comments can be posted in the <a href="https://groups.google.com/a/mst.edu/d/forum/cs5400-sp2016-grp">Google Group</a>.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

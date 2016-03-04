@@ -1,0 +1,220 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,700,700italic,400italic);
+@import url(http://fonts.googleapis.com/css?family=Inconsolata:400,700);
+
+.color-primary { color: #2D4671 }	/* Main Primary color */
+.color-primary-lightest { color: #7689A9 }
+.color-primary-light { color: #4D658D }
+.color-primary-dark { color: #152C55 }
+.color-primary-darkest { color: #051838 }
+
+.color-complement { color: #AA8239 }	/* Main Complement color */
+.color-complement-lightest { color: #FFE1AA }
+.color-complement-light { color: #D5AF6B }
+.color-complement-dark { color: #805A16 }
+.color-complement-darkest { color: #553700 }
+
+* {
+	-webkit-transition: all 333ms linear;
+	-moz-transition: all 333ms linear;
+	-o-transition: all 333ms linear;
+	-ms-transition: all 333ms linear;
+	transition: all 333ms linear;
+}
+
+::selection {
+  background: #FFE1AA; /* WebKit/Blink Browsers */
+}
+
+::-moz-selection {
+  background: #FFE1AA; /* Gecko Browsers */
+}
+
+html {
+	background-color: #152C55;
+	font-family: 'Roboto', sans-serif;
+}
+
+strong {
+	font-weight: bold;
+}
+
+em {
+	font-style: italic;
+}
+
+a, a:visited {
+	color: #2D4671;
+	text-decoration: underline;
+}
+
+a:hover, a:focus, a:active {
+	color: #AA8239;
+}
+
+*:focus {
+	outline: dotted 0.125em #7689A9;
+}
+
+heading { font-weight: bold; font-size: 1.5em; }
+
+h1 {
+	font-size: 2.5em;
+	font-weight: bold;
+	color: #051838;
+}
+
+h2,
+.game-class > header {
+	font-size: 2em;
+	font-weight: bold;
+	color: #152C55;
+}
+
+h3,
+.game-class section > header {
+	font-size: 1.5em;
+	font-weight: bold;
+	color: #2D4671;
+}
+
+h4,
+.function header,
+.attribute header {
+	font-size: 1.25em;
+	font-weight: bold;
+	color: #051838;
+}
+
+p {
+	margin: 0 0 1em 0;
+}
+
+p:last-child {
+	margin: 0;
+}
+
+#main {
+	font-size: 1em;
+	background-color: #fcfcfc;
+	color: #121212;
+	width: 1280px;
+	margin: 2em auto;
+	padding: 1em;
+}
+
+:disabled {
+	background-color: #cdcdcd;
+	color: #494949;
+}
+
+#site-title {
+	background: #051838;
+	width: 100%;
+	text-align: center;
+	font-weight: bold;
+	padding: 0.25em 0;
+	font-size: 3em;
+	margin-bottom: 0.5em;
+}
+
+#site-title, #site-title a {
+	color: #D5DCE8;
+	text-decoration: none;
+}
+
+#site-title a:hover, #site-title a:focus, #site-title a:active {
+	color: #FFE1AA;
+}
+
+table tr {
+	padding: 0.125em;
+	background-color: #D5DCE8;
+}
+
+table tr th {
+	font-weight: bold;
+	text-align: left;
+}
+
+table tr td,
+table tr th {
+	padding: 0.125em;
+}
+
+
+table tr:nth-child(even) {
+	background-color: #A7B4CB;
+}
+
+#chesser ul { list-style-type: square; }
+#chesser li { margin-left: 2em; }
+
+#chesser {width: 1280px; height: 744px;}
+#chesser .canvases {width: 720px; height: 720px; display: inherit;}
+#chesser .canvases .ui {opacity:  0.667}
+#chesser canvas {width: 720px; height: auto; position: absolute;}
+#chesser #rank-file {display: inline-block;}
+#chesser #rank-file tr td {vertical-align: middle; text-align: center; height: 1.4em;}
+#chesser #rank-file tr td#canvases-wrapper {vertical-align: top; text-align: left; margin: 0; padding: 0;}
+#chesser #rank-file tr td:first-child {width: 1.2em;}
+#chesser #rank-file tr td:nth-child(even) {background-color: #A7B4CB;}
+#chesser #rank-file tr td .same-width {display: inline-block; width: 2em;}
+
+#chesser .tabs {background: #333; padding: 1em 1em 1em 0.25em;}
+#chesser .tabs-content {margin-top: -0.5em; background: #ccc; padding: 1em 0.5em;}
+#chesser .tabs-content > div {display: none;}
+#chesser .tabs-content > div.current {display: block;}
+#chesser .tabs span.current {background: #ccc; color: #111;}
+#chesser .tabs span {background: #666; padding: 0.5em 0.5em 0.45em 0.5em; margin: -0.4em 0.25em; cursor: pointer; color: #eee;}
+#chesser .status .player:before {margin-left: 1em; margin-right: 0.125em; content: "\00a0";}
+#chesser .status .current-player:before {content:"\25B6";}
+#chesser .file #download-link {display: block; width: 100%;}
+#chesser #turn-slider {width: 16.5em;}
+#chesser #playback-speed {width: 3em;}
+
+#chesser .infobox {float: right; height: 744px; width: 516px; background: #ccc;}
+#chesser .infobox .field {display: block; margin-bottom: 0.5em;}
+#chesser .infobox .field label {display: inline-block; width: 6em;}
+
+#chesser .infobox .confirm-move {margin-top: 1em; display: none;}
+#chesser .infobox .confirm-move.run-turn {display: block;}
+#chesser .infobox .confirm-move .promotion-field {display: none;}
+#chesser .infobox .confirm-move .promotion-field.needed {display: block;}
+#chesser .infobox .confirm-move .time { font-family: monospace; width: 100%; text-align: right; }
+#chesser .infobox .confirm-move .confirm {margin: 0.5em 0 1em 0;}
+#chesser .infobox .help h2 { font-size: 1.5em; margin: 1.5em 0 0.5em 0; }
+#chesser .infobox .help h2:first-child {margin-top: 0;}
+#chesser .infobox .help hr {border: none; border-bottom: 2px solid #dedede;}
+
+.white-player { background: #fafafa; color: #121212; }
+.black-player { background: #121212; color: #989898; }
+
+.player {padding: 0.25em;}
+
+#chesser .infobox .status .moves { background: #909090; padding: 0.5em; overflow-y: scroll; max-height: 24em; }
+#chesser .infobox .status .moves li span { display: inline-block; width: 4em; text-align: center; padding: 0.25em; }
+#chesser .infobox .status .moves li { margin: 0.3em; list-style-type: decimal; margin-left: 3.5em; }
+
+#chesser #inspect-tree {font-family: monospace; font-size: 1.25em; height: 41.5em; overflow-y: scroll; overflow-x: hidden;}
+#chesser ul#inspect-tree, #chesser ul#inspect-tree ul {list-style: none;}
+#chesser ul#inspect-tree > li {margin-left: 0;}
+#chesser #inspect-tree li:before { content: "\25AA"; width: 1.25em; display: inline-block; }
+#chesser .inspect-label:after {content: " = ";}
+#chesser #inspect-tree .inspect-type-game-object:before, #chesser #inspect-tree .inspect-type-array:before, #chesser #inspect-tree .inspect-type-dictionary:before {content: "\25B8";}
+#chesser #inspect-tree .inspect-type-game-object-reference:before {content: "\25AB";}
+#chesser #inspect-tree header {display: inline;}
+#chesser #inspect-tree .inspect-type-game-object.inspecting:before, #chesser #inspect-tree .inspect-type-array.inspecting:before, #chesser #inspect-tree .inspect-type-dictionary.inspecting:before {content: "\25BE";}
+#chesser .inspect-type-game-object > header, #chesser .inspect-type-game-object-reference > header, #chesser .inspect-type-array > header, #chesser .inspect-type-dictionary > header {cursor: pointer;}
+#chesser #inspect-tree li.highlight { background: #ffff80; }
+#chesser #inspect-tree li.inspecting > ul {display: block;}
+#chesser #inspect-tree li:not(.inspecting) > ul {display: none;}
+#chesser #file-loading progress {display: inline-block; width: 16em;}
+
+#chesser #inspect-tree .inspect-type-null > header > .inspect-value { font-style: italic; color: #777; }
+#chesser #inspect-tree .inspect-type-string > header > .inspect-value { color: #006600; }
+#chesser #inspect-tree .inspect-type-boolean  > header >.inspect-value { color: #0033cc; }
+#chesser #inspect-tree .inspect-type-number  > header >.inspect-value { color: #cc0000; }
+#chesser #inspect-tree .inspect-type-game-object  > header >.inspect-value { font-weight: bold; color: #333333; }
+#chesser #inspect-tree .inspect-type-game-object-reference > header >.inspect-value { font-weight: bold; color: #333333; text-decoration: underline; }
+#chesser #inspect-tree .inspect-type-array  > header >.inspect-value { color: #997300; }
+#chesser #inspect-tree .inspect-type-dictionary  > header > .inspect-value { color: #b30059; }

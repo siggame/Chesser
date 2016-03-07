@@ -1,182 +1,4 @@
-// Cheser code. yes it's super hack-ish.
-
-function clamp(num, min, max) {
-	return Math.min(Math.max(num, min), max);
-};
-
-function clone(obj) {
-	return $.extend(true, {}, obj);
-};
-
-function capitalizeFirstLetter(string) {
-	return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
-function isObject(obj) {
-	return obj !== null && typeof(obj) === "object";
-};
-
-function cleanPos(obj) {
-	var file;
-	var rank;
-	switch(typeof(obj)) {
-		case "string":
-			file = obj;
-			rank = parseInt(obj[1]);
-			break;
-		case "object":
-			file = obj.file;
-			rank = obj.rank;
-			break;
-	}
-
-	return {
-		file: file.charCodeAt(0) - "a".charCodeAt(0),
-		rank: 8 - rank,
-	};
-};
-
-function randomFromString(seedString) {
-	var hash = 0;
-	for(var i = 0; i < seedString.length; i++) {
-		var chr = seedString.charCodeAt(i);
-		hash = ((hash << 5) - hash) + chr;
-		hash |= 0; // Convert to 32bit integer
-	}
-
-	var x = Math.sin(hash) * 10000;
-	return x - Math.floor(x);
-};
-
-function formatTime(date) {
-	var min = date.getMinutes();
-	var sec = date.getSeconds();
-
-	return min + ":" + (sec < 10 ? "0" : "") + sec;
-};
-
-function easeInOutCubic(x, t, b, c, d) {
-	if ((t/=d/2) < 1) return c/2*t*t*t + b;
-	return c/2*((t-=2)*t*t + 2) + b;
-};
-
-function getUrlParameter(sParam) {
-	var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-		sURLVariables = sPageURL.split('&'),
-		sParameterName,
-		i;
-
-	for (i = 0; i < sURLVariables.length; i++) {
-		sParameterName = sURLVariables[i].split('=');
-
-		if (sParameterName[0] === sParam) {
-			return sParameterName[1] === undefined ? true : sParameterName[1];
-		}
-	}
-};
-
-
-
-function HSLColor(h, s, l) {
-	this.h = clamp(Math.round(h), 0, 360);
-	this.s = clamp(Math.round(s * 100), 0, 100);
-	this.l = clamp(Math.round(l * 100), 0, 100);
-};
-
-HSLColor.prototype.toString = function() {
-	return "hsl(" + this.h + ", " + this.s + "%, " + this.l + "%)";
-};
-
-function Color(r, g, b, a) {
-	a = a === undefined ? 1 : a;
-	this.r = clamp(Math.round(r * 255), 0, 255);
-	this.g = clamp(Math.round(g * 255), 0, 255);
-	this.b = clamp(Math.round(b * 255), 0, 255);
-	this.a = clamp(a, 0, 1);
-};
-
-Color.prototype.toString = function() {
-	return "rgba(" + this.r + ", " + this.g + ", " + this.b + ", "+ this.a +")";
-};
-
-
-
-function CanvasWrapper($canvas, width, height) {
-	this.$element = $canvas;
-	this.context = $canvas[0].getContext("2d");
-	$canvas.bind('contextmenu', function(e){
-		return false;
-	});
-
-	this._fontFamily = "sans-serif";
-
-	this.width = width || 100;
-	this.height = height || 100;
-	this._attrWidth = 720;
-	this._attrHeight = 720;
-
-	this._d = this._attrHeight / this.height; // assumes height/width are the same scalar diff
-
-	this.$element.attr("width", this._attrWidth);
-	this.$element.attr("height", this._attrHeight);
-};
-
-CanvasWrapper.prototype.drawRectangle = function(color, x, y, width, height) {
-	width = width || 1;
-	height = height || 1;
-
-	this.context.fillStyle = color.toString();
-	this.context.fillRect(x * this._d, y * this._d, width * this._d, height * this._d);
-};
-
-CanvasWrapper.prototype.drawText = function(text, color, height, x, y) {
-	this.context.font = "" + Math.floor(height * this._d) + "px " + this._fontFamily;
-	this.context.fillStyle = color.toString();
-	x = x || 0;
-	y = y || 0;
-	this.context.textBaseline = "top";
-	this.context.fillText(text, x * this._d, y * this._d);
-};
-
-CanvasWrapper.prototype.fillRoundedRectangle = function(color, x, y, width, height, radius) {
-	this._roundedRectangle(x, y, width, height, radius);
-	this.context.fillStyle = color.toString();
-	this.context.fill();
-};
-
-CanvasWrapper.prototype.strokeRoundedRectangle = function(stroke, color, x, y, width, height, radius) {
-	this._roundedRectangle(x, y, width, height, radius);
-	this.context.lineWidth = stroke * this._d;
-	this.context.strokeStyle = color.toString();
-	this.context.stroke();
-};
-
-CanvasWrapper.prototype._roundedRectangle = function(x, y, width, height, radius) {
-	var ctx = this.context;
-
-	x = this._d * x;
-	y = this._d * y;
-	width = this._d * width;
-	height = this._d * height;
-	radius = this._d * radius;
-
-	ctx.beginPath();
-	ctx.moveTo(x, y + radius);
-	ctx.lineTo(x, y + height - radius);
-	ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
-	ctx.lineTo(x + width - radius, y + height);
-	ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
-	ctx.lineTo(x + width, y + radius);
-	ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
-	ctx.lineTo(x + radius, y);
-	ctx.quadraticCurveTo(x, y, x, y + radius);
-};
-
-CanvasWrapper.prototype.clear = function() {
-	this.context.clearRect(0, 0, this._attrWidth, this._attrHeight);
-};
-
-
+// Chesser - the "main" class which deals with all the input/output of the other classes, and human input
 
 function Chesser() {
 	this.$this = $("#chesser");
@@ -443,7 +265,7 @@ Chesser.prototype._drawBackground = function(h) {
 			canvas.fillRoundedRectangle(dark ? darkInner : lightInner, file + borderWidth, rank + borderWidth, 1 - borderWidth*2, 1 - borderWidth*2, borderRadius);
 		}
 	}
-}
+};
 
 Chesser.prototype.connectTo = function(server, port, spectating, optionalArgs) {
 	var self = this;
@@ -563,6 +385,26 @@ Chesser.prototype._emptyBoard = function() {
 	return this._board;
 };
 
+Chesser.prototype._cleanPos = function(obj) {
+	var file;
+	var rank;
+	switch(typeof(obj)) {
+		case "string":
+			file = obj;
+			rank = parseInt(obj[1]);
+			break;
+		case "object":
+			file = obj.file;
+			rank = obj.rank;
+			break;
+	}
+
+	return {
+		file: file.charCodeAt(0) - "a".charCodeAt(0),
+		rank: 8 - rank,
+	};
+};
+
 Chesser.prototype._updateBoard = function() {
 	var current = this._gameStates[this.renderingTurn];
 	var next = this._gameStates[this.renderingTurn + 1];
@@ -578,13 +420,13 @@ Chesser.prototype._updateBoard = function() {
 		if(gameObjs.hasOwnProperty(id)) {
 			var gameObj = gameObjs[id];
 			if(gameObj.gameObjectName === "Piece" && !gameObj.captured) {
-				var pos = cleanPos(gameObj);
+				var pos = this._cleanPos(gameObj);
 				this._board[pos.file][pos.rank] = gameObj; // for playing as a client (they should not be moving before making moves, chess is not asyncronous)
 
 				var fadeOut = false;
 				if(this.renderingTurnDT > 0 && nextGameObjs) {
 					var nextGameObj = nextGameObjs[id];
-					var toPos = cleanPos(nextGameObj);
+					var toPos = this._cleanPos(nextGameObj);
 
 					if(nextGameObj.captured) {
 						fadeOut = true;
@@ -689,7 +531,7 @@ Chesser.prototype._onClick = function(x, y, button) {
 				// see if they clicked a valid move tile
 				for(var i = 0; i < this._activeValidMoves.length; i++) {
 					var move = this._activeValidMoves[i];
-					var pos = cleanPos(move.to);
+					var pos = this._cleanPos(move.to);
 					if(pos.file === file && pos.rank === rank) {
 						return this._confirmMove(move);
 					}
@@ -775,7 +617,7 @@ Chesser.prototype._updateUI = function() {
 	canvas.clear();
 
 	if(this._activePiece) {
-		var pos = cleanPos(this._activePiece);
+		var pos = this._cleanPos(this._activePiece);
 		canvas.strokeRoundedRectangle(0.1, this._uiActiveHightlightColor, pos.file, pos.rank, 1, 1, 0.2);
 	}
 
@@ -789,7 +631,7 @@ Chesser.prototype._updateUI = function() {
 	for(var key in moves) {
 		if(moves.hasOwnProperty(key)) {
 			var move = moves[key];
-			var pos = cleanPos(move.to);
+			var pos = this._cleanPos(move.to);
 			var color = this._uiHighlightColor;
 			if(this._activeMove && move.to === this._activeMove.to) {
 				color = this._uiActiveHightlightColor;
@@ -1089,143 +931,3 @@ Chesser.prototype._inspectGameObject = function(obj) {
 		$li.removeClass("highlight");
 	}, 3000);
 };
-
-
-
-function Joueur(server, port, spectating, optionalArgs, errorCallback) {
-	var self = this;
-	this.gameStates = [];
-
-	server = server || "localhost";
-	port = port || 3088;
-	try {
-		this.ws = new WebSocket("ws://" + server + ":" + port);
-	}
-	catch(err) {
-		errorCallback && errorCallback(err);
-	}
-
-	this.ws.onopen = function() {
-		self.send("play", {
-			gameName: "Chess",
-			requestedSession: optionalArgs.requestedSession || "*",
-			spectating: spectating ? true : undefined,
-			clientType: "JavaScript in Browser",
-			playerName: optionalArgs.playerName || "In Browser",
-		});
-	};
-
-	this.ws.onerror = function(err) {
-		errorCallback && errorCallback(err);
-	};
-
-	this.ws.onmessage = function(message) {
-		if(getUrlParameter("printIO")) {
-			console.log("FROM SERVER <-- ", message.data);
-		}
-
-		self.received(JSON.parse(message.data));
-	};
-
-	this.ws.onclose = function() {
-		self.onClose && self.onClose();
-	};
-};
-
-Joueur.prototype.received = function(data) {
-	var captializedEvent = capitalizeFirstLetter(data.event);
-
-	var funct = this["_autoHandle" + captializedEvent];
-	if(funct) {
-		funct.call(this, data.data);
-	}
-
-	if(this["on" + captializedEvent]) {
-		this["on" + captializedEvent](data.data);
-	}
-};
-
-Joueur.prototype._autoHandleOver = function(data) {
-	this.ws.close();
-};
-
-Joueur.prototype._autoHandleDelta = function(data) {
-	Joueur.prototype.addDelta(this.gameStates, this.gameStates[this.gameStates.length - 1], data);
-};
-
-Joueur.prototype.addDelta = function(states, prev, delta) {
-	prev = prev || {};
-	var newState = Joueur.prototype.mergeDelta(clone(prev), delta);
-	newState._notMove = false;
-
-	// see if a chess piece moved from prev to newState
-	for(var id in newState.gameObjects) {
-		if(newState.gameObjects.hasOwnProperty(id)) {
-			if(!prev.gameObjects || !prev.gameObjects[id]) {
-				continue;
-			}
-
-			if(newState.gameObjects[id].file !== prev.gameObjects[id].file || newState.gameObjects[id].rank !== prev.gameObjects[id].rank) {
-				newState._notMove = true;
-				break;
-			}
-		};
-	}
-
-	states.push(newState);
-};
-
-Joueur.prototype.mergeDelta = function(state, delta) {
-	var deltaLength = delta["&LEN"];
-
-	if(deltaLength !== undefined) { // then this part in the state is an array
-		delete delta["&LEN"]; // we don't want to copy this key/value over to the state, it was just to signify it is an array
-		while(state.length > deltaLength) { // pop elements off the array until the array is short enough. an increase in array size will be added below as arrays resize when keys larger are set
-			state.pop();
-		}
-	}
-
-	for(var key in delta) {
-		if(delta.hasOwnProperty(key)) {
-			var d = delta[key];
-			if(d === "&RM") {
-				delete state[key];
-			}
-			else if(isObject(d) && isObject(state[key])) {
-				Joueur.prototype.mergeDelta(state[key], d); // static use in case this function is called statically
-			}
-			else {
-				if(isObject(d)) {
-					var newState = (d["&LEN"] === undefined ? {} : []);
-					state[key] = Joueur.prototype.mergeDelta(newState, d);
-				}
-				else {
-					state[key] = d;
-				}
-			}
-		}
-	}
-
-	return state;
-};
-
-Joueur.prototype.send = function(eventName, data) {
-	// NOTE: this does not serialize game objects, so don't be sending cycles like other joueurs
-	var str = JSON.stringify({
-		event: eventName,
-		sentTime: (new Date).getTime(),
-		data: data,
-	});
-
-	if(getUrlParameter("printIO")) {
-		console.log("TO SERVER --> ", str);
-	}
-
-	this.ws.send(str);
-}
-
-$(document).ready(function() {
-	var chesser = new Chesser();
-});
-
-$("#main").css("max-width", "1280px");

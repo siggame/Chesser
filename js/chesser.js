@@ -33,7 +33,7 @@ function Chesser() {
 			else {
 				self.$connect.$playerName.removeAttr("disabled");
 			}
-		})
+		});
 
 	this.tabs = {};
 	$(".tabs-content", this.$this).children().each(function() {
@@ -621,23 +621,30 @@ Chesser.prototype._updateUI = function() {
 		canvas.strokeRoundedRectangle(0.1, this._uiActiveHightlightColor, pos.file, pos.rank, 1, 1, 0.2);
 	}
 
-	// remove duplicate position moves (pawns have 4 moves to end tiles because each move is unqiue due to 4 different promotion types)
-	var moves = {};
-	for(var i = 0; i < this._activeValidMoves.length; i++) {
-		var validMove = this._activeValidMoves[i];
-		moves[validMove.to] = moves[validMove.to] || validMove;
+	if(this._inspectingPiece) {
+		var pos = this._cleanPos(this._inspectingPiece);
+		canvas.fillRoundedRectangle(this._uiActiveHightlightColor, pos.file, pos.rank, 1, 1, 0.2);
 	}
 
-	for(var key in moves) {
-		if(moves.hasOwnProperty(key)) {
-			var move = moves[key];
-			var pos = this._cleanPos(move.to);
-			var color = this._uiHighlightColor;
-			if(this._activeMove && move.to === this._activeMove.to) {
-				color = this._uiActiveHightlightColor;
-			}
+	if(this._activeValidMoves) {
+	// remove duplicate position moves (pawns have 4 moves to end tiles because each move is unqiue due to 4 different promotion types)
+		var moves = {};
+		for(var i = 0; i < this._activeValidMoves.length; i++) {
+			var validMove = this._activeValidMoves[i];
+			moves[validMove.to] = moves[validMove.to] || validMove;
+		}
 
-			canvas.fillRoundedRectangle(color, pos.file, pos.rank, 1, 1, 0.2);
+		for(var key in moves) {
+			if(moves.hasOwnProperty(key)) {
+				var move = moves[key];
+				var pos = this._cleanPos(move.to);
+				var color = this._uiHighlightColor;
+				if(this._activeMove && move.to === this._activeMove.to) {
+					color = this._uiActiveHightlightColor;
+				}
+
+				canvas.fillRoundedRectangle(color, pos.file, pos.rank, 1, 1, 0.2);
+			}
 		}
 	}
 };
@@ -908,6 +915,7 @@ Chesser.prototype._updateInspectAt = function(current, state, location, $list) {
 
 var _highlightTimeout = undefined;
 Chesser.prototype._inspectGameObject = function(obj) {
+	var self = this;
 	if(_highlightTimeout) {
 		clearTimeout(_highlightTimeout);
 		_highlightTimeout = undefined;
@@ -919,15 +927,20 @@ Chesser.prototype._inspectGameObject = function(obj) {
 		.addClass("inspecting")
 		.trigger("chesser-inspect");
 
+	this._inspectingPiece = obj;
+	this._updateUI();
+	this.pause();
+
 	$li = $("#inspect-tree-gameObjects_" + obj.id);
 
-	$li
-		.addClass()
+	$li .addClass()
 		.addClass("inspecting highlight")
 		.trigger("chesser-inspect")
 		[0].scrollIntoView();
 
 	_highlightTimeout = setTimeout(function() {
 		$li.removeClass("highlight");
+		self._inspectingPiece = undefined;
+		self._updateUI();
 	}, 3000);
 };

@@ -739,6 +739,7 @@ Chesser.prototype.isPlaying = function() {
 Chesser.prototype.play = function() {
 	var self = this;
 	this._canInspectCanvas = true;
+	this._highlightPiece(undefined);
 	var dt = 1/60 // update 60 times every 1 second
 	this._updateInterval = window.setInterval(function() {
 		var d = dt * self.playbackSpeed;
@@ -897,6 +898,7 @@ Chesser.prototype._updateInspectAt = function(current, state, location, $list) {
 					else {
 						$li.toggleClass("inspecting");
 						$li.trigger("chesser-inspect");
+						self._highlightPiece($li.hasClass("inspecting") && stateObj.id);
 					}
 				});
 
@@ -916,6 +918,11 @@ Chesser.prototype._updateInspectAt = function(current, state, location, $list) {
 var _highlightTimeout = undefined;
 Chesser.prototype._inspectGameObject = function(obj) {
 	var self = this;
+
+	this.pause();
+
+	this._highlightPiece(obj.id);
+
 	if(_highlightTimeout) {
 		clearTimeout(_highlightTimeout);
 		_highlightTimeout = undefined;
@@ -927,20 +934,23 @@ Chesser.prototype._inspectGameObject = function(obj) {
 		.addClass("inspecting")
 		.trigger("chesser-inspect");
 
-	this._inspectingPiece = obj;
-	this._updateUI();
-	this.pause();
-
-	$li = $("#inspect-tree-gameObjects_" + obj.id);
-
-	$li .addClass()
+	$li = $("#inspect-tree-gameObjects_" + obj.id)
 		.addClass("inspecting highlight")
-		.trigger("chesser-inspect")
-		[0].scrollIntoView();
+		.trigger("chesser-inspect");
+
+	$li[0].scrollIntoView();
 
 	_highlightTimeout = setTimeout(function() {
 		$li.removeClass("highlight");
-		self._inspectingPiece = undefined;
-		self._updateUI();
+		self._highlightPiece(undefined);
 	}, 3000);
+};
+
+Chesser.prototype._highlightPiece = function(id) {
+	this._inspectingPiece = undefined;
+	var gameObject = this.getCurrentState().gameObjects[id]; // in case it is a shallow reference
+	if(gameObject && gameObject.gameObjectName === "Piece") {
+		this._inspectingPiece = gameObject;
+	}
+	this._updateUI();
 };

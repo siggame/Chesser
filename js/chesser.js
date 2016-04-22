@@ -10,8 +10,9 @@ function Chesser() {
 
 	var self = this;
 	this.$connected = $("#chesser .connected");
-	var serverInput = $("#server").attr("value", window.location.hostname);
 	this.$connect = $("#chesser .connect");
+	var serverInput = $("#server").val(window.location.hostname);
+	$("#tournament-server").val(window.location.hostname);
 	this.$connect.submit(function(e) {
 		e.preventDefault();
 		var server = serverInput.val();
@@ -21,7 +22,6 @@ function Chesser() {
 			playerName: self.$connect.$playerName.val(),
 			requestedSession: $("#session", this).val(),
 		});
-		self.$connect.hide();
 	});
 
 	this.$connect.$playerName = $("#player-name", this.$connect);
@@ -34,6 +34,46 @@ function Chesser() {
 				self.$connect.$playerName.removeAttr("disabled");
 			}
 		});
+
+	this.$tournamentLogs = $("#tournament-logs");
+	this.$tournamentSetup = $("#chesser .tournament .setup").submit(function(e) {
+		e.preventDefault();
+
+		// get all the inputs into an array.
+		var $inputs = $(":input", self.$tournamentSetup);
+		var values = {};
+		var invalids = false;
+		$inputs.each(function() {
+			if(this.name) {
+				var $this = $(this);
+				var val = $this.val();
+				$this.toggleClass("invalid", !val);
+				if(val) {
+					values[this.name] = val;
+				}
+				else {
+					invalids = true;
+				}
+			}
+		});
+
+		if(invalids) {
+			return;
+		}
+
+		self.$tournamentSetup.hide();
+		self.tournament = new Tournament(self, values,
+			function tournamentLog(str) {
+				self.logTournament(str);
+			},
+			function tournamentError(err) {
+				self.logTournament("Error: " + err, "error");
+			}
+		);
+
+		self.$connect.hide();
+		self.updateConnection("Awaiting connection info from Tournament");
+	});
 
 	this.tabs = {};
 	$(".tabs-content", this.$this).children().each(function() {
@@ -269,13 +309,21 @@ Chesser.prototype._drawBackground = function(h) {
 
 Chesser.prototype.connectTo = function(server, port, spectating, optionalArgs) {
 	var self = this;
+	this.setCurrentTab("connection");
+	this.$connect.hide();
+
+	if(!this.tournament) {
+		this.logTournament("Cannot connect to Tournament during live playback");
+	}
+
+	this.$tournamentSetup.hide();
 	this.playing = !spectating;
 	this.tabs.file.$content.children().each(function() {
 		var $child = $(this);
 		$child.toggle($child.hasClass("no-load"));
 	});
 	this._joueur = new Joueur(server, port, spectating, optionalArgs, function(err) {
-		self.updateConnection("Error connecting to " + server + ":" + port);
+		self.updateConnection("Error connecting to " + server + ":" + port, "error");
 	});
 
 	this._gameStates = this._joueur.gameStates; // we have no gamelog rank to read gamestates from, instead the joueur client will handle fetching new gamestates as they stream in
@@ -317,7 +365,7 @@ Chesser.prototype.connectTo = function(server, port, spectating, optionalArgs) {
 
 	this._joueur.onClose = function() {
 		if(!self.over) {
-			self.updateConnection("Connection closed unexpectedly...");
+			self.updateConnection("Connection closed unexpectedly...", "error");
 			self.setCurrentTab("connection");
 		}
 	};
@@ -360,13 +408,21 @@ Chesser.prototype.playerDone = function() {
 	this.tabs.status.confirmMove.$element.removeClass("run-turn");
 };
 
-Chesser.prototype.updateConnection = function(str) {
-	this.$connected.append($("<li>").html(str));
+Chesser.prototype.updateConnection = function(str, classes) {
+	return this._addToLogList(this.$connected, str, classes);
+};
+
+Chesser.prototype.logTournament = function(str, classes) {
+	return this._addToLogList(this.$tournamentLogs, str, classes);
 };
 
 Chesser.prototype.addFileMessage = function(str, classes) {
+	return this._addToLogList(this.tabs.file.$messages, str, classes);
+};
+
+Chesser.prototype._addToLogList = function($list, str, classes) {
 	var $li =$("<li>").html(str);
-	this.tabs.file.$messages.append($li);
+	$list.append($li);
 
 	if(classes) {
 		$li.addClass(classes);
@@ -690,7 +746,10 @@ Chesser.prototype._updateMovesTable = function() {
 };
 
 Chesser.prototype._gamelogLoaded = function(parsed) {
+	this.$connect.hide();
 	this.updateConnection("Cannot connect to live games while playing back gamelogs.");
+	this.$tournamentSetup.hide();
+	this.logTournament("Cannot connect to tournaments while playing back gamelogs.");
 	this.addFileMessage("Parsing gamelog.");
 	this.tabs.inspect.$needGamelog.hide();
 	this.tabs.file.$progress.attr("max", parsed.deltas.length);

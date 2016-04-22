@@ -126,6 +126,14 @@ p:last-child {
 	color: #FFE1AA;
 }
 
+input.invalid {
+	border-color: red;
+}
+
+.error, li.error {
+	color: red;
+}
+
 table tr {
 	padding: 0.125em;
 	background-color: #D5DCE8;

@@ -20,6 +20,7 @@ function Joueur(server, port, spectating, optionalArgs, errorCallback) {
 			spectating: spectating ? true : undefined,
 			clientType: "In Browser",
 			playerName: optionalArgs.playerName || "In Browser",
+			playerIndex: optionalArgs.playerIndex,
 		});
 	};
 

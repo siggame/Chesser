@@ -9,6 +9,7 @@
 		<script type="text/javascript" src="js/color.js"></script>
 		<script type="text/javascript" src="js/canvasWrapper.js"></script>
 		<script type="text/javascript" src="js/joueur.js"></script>
+		<script type="text/javascript" src="js/tournament.js"></script>
 		<script type="text/javascript" src="js/chesser.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
 	</head>
@@ -69,6 +70,7 @@
 						<span class="tab-for-status">Status</span>
 						<span class="tab-for-file">File</span>
 						<span class="tab-for-connection">Connection</span>
+						<span class="tab-for-tournament">Tournament</span>
 						<span class="tab-for-inspect">Inspect</span>
 						<span class="tab-for-help current">Help</span>
 					</div>
@@ -149,6 +151,32 @@
 								</div>
 							</form>
 							<ul class="connected">
+							</ul>
+						</div>
+						<div class="tournament">
+							<form class="setup">
+								<div class="field">
+									<label for="tournament-server">Server</label>
+									<input id="tournament-server" name="server" type="textbox" value="r99acm.device.mst.edu">
+								</div>
+								<div class="field">
+									<label for="tournament-port">Port</label>
+									<input id="tournament-port" name="port" type="number" min="80" max="65535" value="5454">
+								</div>
+								<div class="field">
+									<label for="tournament-name">Name</label>
+									<input id="tournament-name" name="name" type="textbox" value="">
+								</div>
+								<div class="field">
+									<label for="tournament-password">Password</label>
+									<input id="tournament-password" name="password" type="password">
+								</div>
+								<div class="field">
+									<label></label>
+									<input type="submit" value="Connect">
+								</div>
+							</form>
+							<ul id="tournament-logs">
 							</ul>
 						</div>
 						<div class="inspect">

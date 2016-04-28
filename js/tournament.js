@@ -61,8 +61,6 @@ Tournament.prototype.send = function(eventName, data) {
 };
 
 Tournament.prototype.received = function(data) {
-	console.log("received", data);
-
 	var event = data.event;
 	var callbackName = "on" + event.charAt(0).toUpperCase() + event.slice(1);
 	if(!this[callbackName]) {
@@ -74,10 +72,14 @@ Tournament.prototype.received = function(data) {
 };
 
 Tournament.prototype.onMessage = function(data) {
-	console.log("message", data);
+	this.log(data);
 };
 
 Tournament.prototype.onPlay = function(data) {
 	this.log("Recieved play data from Chesser-Master, connecting...");
 	this.chesser.connectTo(data.server, data.port, undefined, data);
+};
+
+Tournament.prototype.close = function(data) {
+	this.ws.close();
 };

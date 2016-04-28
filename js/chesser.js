@@ -368,6 +368,10 @@ Chesser.prototype.connectTo = function(server, port, spectating, optionalArgs) {
 			self.updateConnection("Connection closed unexpectedly...", "error");
 			self.setCurrentTab("connection");
 		}
+
+		if(self.tournament) {
+			self.tournament.close();
+		}
 	};
 
 	if(this.playing) {

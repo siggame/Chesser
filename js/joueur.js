@@ -14,14 +14,14 @@ function Joueur(server, port, spectating, optionalArgs, errorCallback) {
 	}
 
 	this.ws.onopen = function() {
-		self.send("play", {
+		self.send("play", $.extend({
 			gameName: "Chess",
-			requestedSession: optionalArgs.requestedSession || "*",
+			requestedSession: "*",
 			spectating: spectating ? true : undefined,
 			clientType: "In Browser",
-			playerName: optionalArgs.playerName || "In Browser",
-			playerIndex: optionalArgs.playerIndex,
-		});
+			playerName: "Human",
+			playerIndex: optionalArgs.index,
+		}, optionalArgs);
 	};
 
 	this.ws.onerror = function(err) {

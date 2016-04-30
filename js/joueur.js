@@ -16,7 +16,7 @@ function Joueur(server, port, spectating, optionalArgs, errorCallback) {
 	this.ws.onopen = function() {
 		self.send("play", $.extend({
 			gameName: "Chess",
-			requestedSession: "*",
+			requestedSession: optionalArgs.session || "*",
 			spectating: spectating ? true : undefined,
 			clientType: "In Browser",
 			playerName: "Human",

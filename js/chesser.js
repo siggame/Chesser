@@ -194,6 +194,7 @@ function Chesser() {
 	this.tabs.inspect.$needGamelog = $(".need-game-loaded", this.tabs.inspect.$content);
 
 	this.tabs.status.confirmMove.$button.on("click", function(e) {
+		self.tabs.status.confirmMove.$button.prop("disabled", true);
 		e.preventDefault();
 		self._joueur.send("run", {
 			caller: {id: self._activePiece.id},

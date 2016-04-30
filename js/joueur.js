@@ -21,7 +21,7 @@ function Joueur(server, port, spectating, optionalArgs, errorCallback) {
 			clientType: "In Browser",
 			playerName: "Human",
 			playerIndex: optionalArgs.index,
-		}, optionalArgs);
+		}, optionalArgs));
 	};
 
 	this.ws.onerror = function(err) {

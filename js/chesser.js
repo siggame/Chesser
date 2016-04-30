@@ -1011,7 +1011,8 @@ Chesser.prototype._inspectGameObject = function(obj) {
 
 Chesser.prototype._highlightPiece = function(id) {
 	this._inspectingPiece = undefined;
-	var gameObject = this.getCurrentState().gameObjects[id]; // in case it is a shallow reference
+	var currentState = this.getCurrentState();
+	var gameObject = currentState && currentState.gameObjects[id]; // in case it is a shallow reference
 	if(gameObject && gameObject.gameObjectName === "Piece") {
 		this._inspectingPiece = gameObject;
 	}
